@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { GitHubUser, GitHubRepo, GitHubSearchResults } from "../types/index";
-import { GitHubUserSearchResult, GitHubUserDetailed,} from "../types/index";
+import { GitHubUserDetailed,} from "../types/index";
 
 
 const GITHUB_API_BASE = "https://api.github.com";

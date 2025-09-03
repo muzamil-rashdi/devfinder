@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Grid } from '@mui/material';
+import { Container, Typography} from '@mui/material';
 import { useAppSelector } from '../../redux/hooks';
 import ProfileCard from '../../components/cards/ProfileCard/ProfileCard';
 import { useTheme } from '../../context/ThemeContext';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Tabs, Tab, Box, CircularProgress, Alert, Typography, Grid } from '@mui/material';
+import { Container, Tabs, Tab, Box, CircularProgress, Alert, Typography } from '@mui/material';
 import { useUser, useUserRepos, useUserFollowers, useUserFollowing } from '../../api/github';
 import ProfileCard from '../../components/cards/ProfileCard/ProfileCard';
 import RepoCard from '../../components/cards/RepoCard/RepoCard';
@@ -29,8 +29,8 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other })
 const Profile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
   const [tabValue, setTabValue] = useState(0);
-  const [followersPage, setFollowersPage] = useState(1);
-  const [followingPage, setFollowingPage] = useState(1);
+  const [followersPage] = useState(1);
+  const [followingPage] = useState(1);
   const { theme } = useTheme();
 
   const { data: user, isLoading: userLoading, error: userError } = useUser(username || '');
