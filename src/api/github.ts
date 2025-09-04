@@ -116,21 +116,12 @@ export const useSearchUsers = (
   page: number,
   options?: UseQueryOptions<GitHubSearchResults<GitHubUser>, Error>
 ) => {
-  return useQuery<GitHubSearchResults<GitHubUser>, Error>({
-    queryKey: ["searchUsers", query, page],
-    queryFn: async () => {
-      try {
-        const data = await searchUsers(query, page);
-        console.log("API Response:", data); // Debug log
-        return data;
-      } catch (error) {
-        console.error("API Error:", error); // Debug log
-        throw error;
-      }
-    },
-    enabled: query.length > 2,
-    ...options,
-  } as UseQueryOptions<GitHubSearchResults<GitHubUser>, Error>);
+return useQuery({
+  queryKey: ["searchUsers", query, page],
+  queryFn: () => searchUsers(query, page), // Simplified
+  enabled: query.length > 2,
+  ...options,
+});
 };
 
 export const useUser = (username: string) => {
