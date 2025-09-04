@@ -55,14 +55,32 @@ const Home: React.FC = () => {
           }}
           InputProps={{
             startAdornment: <Search className="mr-2" style={{ color: theme.textSecondary }} />,
+            sx: {
+              color: theme.text,
+              '& .MuiInputBase-input': {
+                color: theme.text,
+              },
+            },
           }}
-          style={{ 
-            backgroundColor: theme.surface,
-            borderRadius: "8px",
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: theme.surface,
+              color: theme.text,
+              '& fieldset': {
+                borderColor: theme.border,
+              },
+              '&:hover fieldset': {
+                borderColor: theme.primary,
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: theme.primary,
+              },
+            },
           }}
         />
       </div>
 
+      {/* Rest of the component remains the same */}
       {isError && (
         <Alert severity="error" className="mb-4">
           {error instanceof Error ? error.message : 'An error occurred while searching'}
@@ -95,11 +113,14 @@ const Home: React.FC = () => {
           {searchResults.total_count > 0 && (
             <div className="flex justify-center">
               <Pagination
-                count={Math.ceil(Math.min(searchResults.total_count, 1000) / 10)} // GitHub API returns max 1000 results
+                count={Math.ceil(Math.min(searchResults.total_count, 1000) / 10)}
                 page={page}
                 onChange={(_, value) => setPage(value)}
-                color="primary"
-                style={{ color: theme.primary }}
+                sx={{
+                  '& .MuiPaginationItem-root': {
+                    color: theme.text,
+                  },
+                }}
               />
             </div>
           )}

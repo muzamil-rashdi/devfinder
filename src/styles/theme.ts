@@ -8,7 +8,7 @@ export interface Theme {
   border: string;
   error: string;
   success: string;
-  shadows: string[];  // ✅ added
+  shadows: string[];
 }
 
 export const lightTheme: Theme = {
@@ -26,7 +26,7 @@ export const lightTheme: Theme = {
     "0px 1px 3px rgba(0,0,0,0.12)",
     "0px 1px 5px rgba(0,0,0,0.12)",
     "0px 3px 5px rgba(0,0,0,0.2)",
-    "0px 4px 6px rgba(0,0,0,0.2)", // index 4
+    "0px 4px 6px rgba(0,0,0,0.2)",
   ],
 };
 
@@ -45,10 +45,8 @@ export const darkTheme: Theme = {
     "0px 1px 3px rgba(0,0,0,0.3)",
     "0px 1px 5px rgba(0,0,0,0.3)",
     "0px 3px 5px rgba(0,0,0,0.4)",
-    "0px 4px 6px rgba(0,0,0,0.5)", // index 4
+    "0px 4px 6px rgba(0,0,0,0.5)",
   ],
 };
-
-
 
 export type ThemeMode = "light" | "dark" | "system";

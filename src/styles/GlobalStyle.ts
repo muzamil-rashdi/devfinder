@@ -1,6 +1,11 @@
 import { createGlobalStyle } from "styled-components";
+import { Theme } from "./theme";
 
-export const GlobalStyle = createGlobalStyle`
+interface GlobalStyleProps {
+  theme: Theme;
+}
+
+export const GlobalStyle = createGlobalStyle<GlobalStyleProps>`
   * {
     margin: 0;
     padding: 0;
@@ -14,6 +19,8 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s, color 0.3s;
+    background-color: ${props => props.theme.background};
+    color: ${props => props.theme.text};
   }
 
   code {
@@ -30,5 +37,36 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
     outline: none;
     cursor: pointer;
+  }
+
+  /* Material-UI theme integration */
+  .MuiTextField-root, .MuiInputBase-root, .MuiOutlinedInput-root {
+    background-color: ${props => props.theme.surface} !important;
+    color: ${props => props.theme.text} !important;
+  }
+
+  .MuiInputBase-input {
+    color: ${props => props.theme.text} !important;
+    &::placeholder {
+      color: ${props => props.theme.textSecondary} !important;
+      opacity: 0.7;
+    }
+  }
+
+  .MuiOutlinedInput-notchedOutline {
+    border-color: ${props => props.theme.border} !important;
+  }
+
+  .MuiPaper-root {
+    background-color: ${props => props.theme.surface} !important;
+    color: ${props => props.theme.text} !important;
+  }
+
+  .MuiTypography-root {
+    color: ${props => props.theme.text} !important;
+  }
+
+  .MuiCardContent-root {
+    background-color: ${props => props.theme.surface} !important;
   }
 `;

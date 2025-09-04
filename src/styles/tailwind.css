@@ -2,20 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: #ffffff;
+    --surface: #f8f9fa;
+    --primary: #3b82f6;
+    --secondary: #6b7280;
+    --text: #1f2937;
+    --textSecondary: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  .dark {
+    --background: #121212;
+    --surface: #1e1e1e;
+    --primary: #2563eb;
+    --secondary: #9ca3af;
+    --text: #f3f4f6;
+    --textSecondary: #d1d5db;
+    --border: #374151;
+  }
+}
+
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors;
+    @apply px-4 py-2 rounded transition-colors;
+    background-color: var(--primary);
+    color: white;
   }
   
   .btn-secondary {
-    @apply px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors;
+    @apply px-4 py-2 rounded transition-colors;
+    background-color: var(--secondary);
+    color: white;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md p-4;
+    @apply rounded-lg shadow-md p-4;
+    background-color: var(--surface);
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2;
+    background-color: var(--surface);
+    border-color: var(--border);
+    color: var(--text);
+    &:focus {
+      ring-color: var(--primary);
+    }
   }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
 }
