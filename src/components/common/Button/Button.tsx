@@ -3,35 +3,37 @@ import styled from "styled-components";
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from "@mui/material";
 import { useTheme } from "../../../context/ThemeContext";
 
-interface StyledButtonProps {
+// Extended props for our styled button
+type CustomButtonProps = {
   $theme: any;
-  variant?: "contained" | "outlined" | "text";
-}
+  $variant?: "contained" | "outlined" | "text";
+};
 
-const StyledButton = styled(MuiButton)<{ $theme: any; variant?: string }>`
-  background-color: ${(props: any) => 
-    props.variant === "contained" ? props.$theme.primary : "transparent"};
-  color: ${(props: any) => 
-    props.variant === "contained" ? "white" : props.$theme.text};
-  border: ${(props: any) => 
-    props.variant === "outlined" ? `1px solid ${props.$theme.primary}` : "none"};
-  
-  &:hover {
-    background-color: ${(props: any) => 
-      props.variant === "contained" ? props.$theme.primary : "rgba(0, 0, 0, 0.04)"};
-  }
+const CustomButton = styled(MuiButton)<CustomButtonProps>`
+  ${({ $variant, $theme }) => `
+    background-color: ${$variant === "contained" ? $theme.primary : "transparent"};
+    color: ${$variant === "contained" ? "white" : $theme.text};
+    border: ${$variant === "outlined" ? `1px solid ${$theme.primary}` : "none"};
+    
+    &:hover {
+      background-color: ${
+        $variant === "contained" ? $theme.primary : "rgba(0,0,0,0.04)"
+      };
+    }
+  `}
 `;
+
 interface ButtonProps extends Omit<MuiButtonProps, "variant"> {
   variant?: "contained" | "outlined" | "text";
 }
 
-const Button: React.FC<ButtonProps> = ({ children, variant = "contained", ...props }) => {
+const Button: React.FC<ButtonProps> = ({ children, variant = "contained", ...rest }) => {
   const { theme } = useTheme();
-  
+
   return (
-    <StyledButton $theme={theme} variant={variant} {...props}>
+    <CustomButton $theme={theme} $variant={variant} {...rest}>
       {children}
-    </StyledButton>
+    </CustomButton>
   );
 };
 

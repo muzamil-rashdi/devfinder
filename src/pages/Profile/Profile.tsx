@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Tabs, Tab, Box, CircularProgress, Alert, Typography } from '@mui/material';
-import { useUser, useUserRepos, useUserFollowers, useUserFollowing } from '../../api/github';
-import ProfileCard from '../../components/cards/ProfileCard/ProfileCard';
-import RepoCard from '../../components/cards/RepoCard/RepoCard';
-import { useTheme } from '../../context/ThemeContext';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Container,
+  Tabs,
+  Tab,
+  Box,
+  CircularProgress,
+  Alert,
+  Typography,
+  Divider,
+} from "@mui/material";
+import {
+  useUser,
+  useUserRepos,
+  useUserFollowers,
+  useUserFollowing,
+} from "../../api/github";
+import ProfileCard from "../../components/cards/ProfileCard/ProfileCard";
+import RepoCard from "../../components/cards/RepoCard/RepoCard";
+import { useTheme } from "../../context/ThemeContext";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -12,16 +26,10 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+    <div hidden={value !== index} role="tabpanel">
+      {value === index && <Box sx={{ pt: 4 }}>{children}</Box>}
     </div>
   );
 };
@@ -33,125 +41,205 @@ const Profile: React.FC = () => {
   const [followingPage] = useState(1);
   const { theme } = useTheme();
 
-  const { data: user, isLoading: userLoading, error: userError } = useUser(username || '');
-  const { data: repos, isLoading: reposLoading, error: reposError } = useUserRepos(username || '', 1);
-  const { data: followers, isLoading: followersLoading, error: followersError } = useUserFollowers(username || '', followersPage);
-  const { data: following, isLoading: followingLoading, error: followingError } = useUserFollowing(username || '', followingPage);
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useUser(username || "");
+  const {
+    data: repos,
+    isLoading: reposLoading,
+    error: reposError,
+  } = useUserRepos(username || "", 1);
+  const {
+    data: followers,
+    isLoading: followersLoading,
+    error: followersError,
+  } = useUserFollowers(username || "", followersPage);
+  const {
+    data: following,
+    isLoading: followingLoading,
+    error: followingError,
+  } = useUserFollowing(username || "", followingPage);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
+  // Loading state
   if (userLoading) {
     return (
-      <Container className="flex justify-center items-center min-h-screen">
-        <CircularProgress style={{ color: theme.primary }} />
+      <Container
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress sx={{ color: theme.primary }} />
       </Container>
     );
   }
 
+  // Error or no user
   if (userError || !user) {
     return (
-      <Container className="py-8">
+      <Container sx={{ py: 8 }}>
         <Alert severity="error">
-          {userError instanceof Error ? userError.message : 'User not found'}
+          {userError instanceof Error ? userError.message : "User not found"}
         </Alert>
       </Container>
     );
   }
 
   return (
-    <Container className="py-8">
-      <div className="mb-8">
+    <Container sx={{ py: 6 }}>
+      {/* Profile Section */}
+      <Box sx={{ mb: 6 }}>
         <ProfileCard user={user} />
-      </div>
+      </Box>
 
-      <Tabs value={tabValue} onChange={handleTabChange} centered>
-        <Tab label="Repositories" />
-        <Tab label={`Followers (${user.followers || 0})`} />
-        <Tab label={`Following (${user.following || 0})`} />
-      </Tabs>
+      {/* Tabs */}
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          centered
+          textColor="primary"
+          indicatorColor="primary"
+        >
+          <Tab label="Repositories" />
+          <Tab label={`Followers (${user.followers || 0})`} />
+          <Tab label={`Following (${user.following || 0})`} />
+        </Tabs>
+      </Box>
 
-      {/* Repositories Tab */}
+      {/* Repositories */}
       <TabPanel value={tabValue} index={0}>
         {reposLoading && (
-          <div className="flex justify-center my-8">
-            <CircularProgress style={{ color: theme.primary }} />
-          </div>
+          <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+            <CircularProgress sx={{ color: theme.primary }} />
+          </Box>
         )}
-        
+
         {reposError && (
-          <Alert severity="error" className="mb-4">
-            {reposError instanceof Error ? reposError.message : 'Failed to load repositories'}
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {reposError instanceof Error
+              ? reposError.message
+              : "Failed to load repositories"}
           </Alert>
         )}
-        
+
         {repos && Array.isArray(repos) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Box
+            sx={{
+              display: "grid",
+              gap: 3,
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr",
+              },
+            }}
+          >
             {repos.map((repo: any) => (
               <RepoCard key={repo.id} repo={repo} />
             ))}
-          </div>
+          </Box>
         )}
       </TabPanel>
 
-      {/* Followers Tab */}
+      {/* Followers */}
       <TabPanel value={tabValue} index={1}>
         {followersLoading && (
-          <div className="flex justify-center my-8">
-            <CircularProgress style={{ color: theme.primary }} />
-          </div>
+          <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+            <CircularProgress sx={{ color: theme.primary }} />
+          </Box>
         )}
-        
+
         {followersError && (
-          <Alert severity="error" className="mb-4">
-            {followersError instanceof Error ? followersError.message : 'Failed to load followers'}
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {followersError instanceof Error
+              ? followersError.message
+              : "Failed to load followers"}
           </Alert>
         )}
-        
+
         {followers && Array.isArray(followers) && (
           <>
             {followers.length === 0 ? (
-              <Typography variant="h6" className="text-center" style={{ color: theme.text }}>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{ color: theme.text, mt: 4 }}
+              >
                 No followers found
               </Typography>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 3,
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "1fr 1fr 1fr",
+                    lg: "1fr 1fr 1fr 1fr",
+                  },
+                }}
+              >
                 {followers.map((follower: any) => (
                   <ProfileCard key={follower.id} user={follower} />
                 ))}
-              </div>
+              </Box>
             )}
           </>
         )}
       </TabPanel>
 
-      {/* Following Tab */}
+      {/* Following */}
       <TabPanel value={tabValue} index={2}>
         {followingLoading && (
-          <div className="flex justify-center my-8">
-            <CircularProgress style={{ color: theme.primary }} />
-          </div>
+          <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+            <CircularProgress sx={{ color: theme.primary }} />
+          </Box>
         )}
-        
+
         {followingError && (
-          <Alert severity="error" className="mb-4">
-            {followingError instanceof Error ? followingError.message : 'Failed to load following'}
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {followingError instanceof Error
+              ? followingError.message
+              : "Failed to load following"}
           </Alert>
         )}
-        
+
         {following && Array.isArray(following) && (
           <>
             {following.length === 0 ? (
-              <Typography variant="h6" className="text-center" style={{ color: theme.text }}>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{ color: theme.text, mt: 4 }}
+              >
                 Not following anyone
               </Typography>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 3,
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "1fr 1fr 1fr",
+                    lg: "1fr 1fr 1fr 1fr",
+                  },
+                }}
+              >
                 {following.map((followedUser: any) => (
                   <ProfileCard key={followedUser.id} user={followedUser} />
                 ))}
-              </div>
+              </Box>
             )}
           </>
         )}
